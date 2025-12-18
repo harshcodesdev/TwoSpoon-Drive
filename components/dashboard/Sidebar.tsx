@@ -1,8 +1,15 @@
 "use client"
 
-import { Plus, Home, HardDrive, Monitor, Users, Clock, Star, AlertCircle, Trash2, ChevronRight } from "lucide-react"
+import { Home, HardDrive, Monitor, Users, Clock, Star, AlertCircle, Trash2, ChevronRight } from "lucide-react"
+import { NewFileMenu } from "./NewFileMenu"
 
-export function Sidebar() {
+interface SidebarProps {
+  onNewFolder: () => void
+  onFileUpload: () => void
+  onFolderUpload: () => void
+}
+
+export function Sidebar({ onNewFolder, onFileUpload, onFolderUpload }: SidebarProps) {
   const navItems = [
     { icon: Home, label: "Home", active: false },
     { icon: HardDrive, label: "My Drive", active: true },
@@ -16,11 +23,14 @@ export function Sidebar() {
 
   return (
     <aside className="w-[240px] border-r border-[#2a2b2f] bg-[#0f0f10] p-3">
-      {/* New Button */}
-      <button className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-[#0f0f10] transition-colors hover:bg-gray-100">
-        <Plus className="h-5 w-5" />
-        <span>New</span>
-      </button>
+      {/* New Button with Menu */}
+      <div className="mb-3">
+        <NewFileMenu
+          onNewFolder={onNewFolder}
+          onFileUpload={onFileUpload}
+          onFolderUpload={onFolderUpload}
+        />
+      </div>
 
       {/* Navigation Items */}
       <nav className="space-y-0.5">

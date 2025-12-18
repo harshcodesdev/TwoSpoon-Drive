@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { FileGrid } from "@/components/dashboard/FileGrid"
 import { ContextMenu } from "@/components/dashboard/ContextMenu"
 import { CreateFolderDialog } from "@/components/dashboard/CreateFolderDialog"
@@ -13,8 +13,11 @@ interface File {
   isFolder: boolean
 }
 
-export default function DashboardPage() {
+export default function FolderPage() {
+  const params = useParams()
   const router = useRouter()
+  const folderId = params.folderId as string
+
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [contextMenuPos, setContextMenuPos] = useState<{ x: number; y: number } | null>(null)
   const [files, setFiles] = useState<File[]>([])
@@ -34,11 +37,11 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    // Fetch files from API (root directory)
+    // Fetch files from API
     const fetchFiles = async () => {
       try {
         setIsLoadingFiles(true)
-        const res = await fetch("/api/files")
+        const res = await fetch(`/api/files?parentId=${folderId}`)
         if (!res.ok) {
           throw new Error("Failed to fetch files")
         }
@@ -51,10 +54,25 @@ export default function DashboardPage() {
       }
     }
 
-    // Root directory has no breadcrumb path
-    setBreadcrumbPath([])
-    fetchFiles()
-  }, [])
+    // Fetch breadcrumb path
+    const fetchBreadcrumbPath = async () => {
+      try {
+        const res = await fetch(`/api/files/path?folderId=${folderId}`)
+        if (res.ok) {
+          const data = await res.json()
+          setBreadcrumbPath(data.path || [])
+        }
+      } catch (error) {
+        console.error("Error fetching breadcrumb path:", error)
+        setBreadcrumbPath([])
+      }
+    }
+
+    if (folderId) {
+      fetchFiles()
+      fetchBreadcrumbPath()
+    }
+  }, [folderId])
 
   const handleFileContextMenu = (e: React.MouseEvent, fileId: string) => {
     e.preventDefault()
@@ -76,7 +94,7 @@ export default function DashboardPage() {
         },
         body: JSON.stringify({
           name,
-          parentId: null, // Root directory
+          parentId: folderId,
         }),
       })
 
@@ -86,7 +104,7 @@ export default function DashboardPage() {
       }
 
       // Refresh files list
-      const filesRes = await fetch("/api/files")
+      const filesRes = await fetch(`/api/files?parentId=${folderId}`)
       if (filesRes.ok) {
         const data = await filesRes.json()
         setFiles(data.files || [])
@@ -104,11 +122,11 @@ export default function DashboardPage() {
     }
   }
 
-  const handleNavigate = (folderId: string | null) => {
-    if (folderId === null) {
+  const handleNavigate = (targetFolderId: string | null) => {
+    if (targetFolderId === null) {
       router.push("/dashboard")
     } else {
-      router.push(`/dashboard/folders/${folderId}`)
+      router.push(`/dashboard/folders/${targetFolderId}`)
     }
   }
 
@@ -155,7 +173,7 @@ export default function DashboardPage() {
         <FileGrid
           files={files}
           breadcrumbPath={breadcrumbPath}
-          currentFolderId={null}
+          currentFolderId={folderId}
           onFileContextMenu={handleFileContextMenu}
           onFileClick={handleFileClick}
           onNavigate={handleNavigate}
@@ -179,3 +197,4 @@ export default function DashboardPage() {
     </>
   )
 }
+

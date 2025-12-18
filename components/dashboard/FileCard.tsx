@@ -1,19 +1,25 @@
 "use client"
 
-import { FileText, File, MoreVertical } from "lucide-react"
+import { FileText, File, MoreVertical, Folder } from "lucide-react"
 import { useState } from "react"
 
 interface FileCardProps {
   id: string
   name: string
-  type: "text" | "file" | "pdf"
+  type?: string
+  isFolder?: boolean
   onContextMenu?: (e: React.MouseEvent, fileId: string) => void
+  onClick?: () => void
 }
 
-export function FileCard({ id, name, type, onContextMenu }: FileCardProps) {
+export function FileCard({ id, name, type, isFolder, onContextMenu, onClick }: FileCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const getIcon = () => {
+    if (isFolder) {
+      return <Folder className="h-[30px] w-[30px] text-[#8ab4f8]" fill="currentColor" />
+    }
+
     switch (type) {
       case "pdf":
         return (
@@ -22,6 +28,7 @@ export function FileCard({ id, name, type, onContextMenu }: FileCardProps) {
           </div>
         )
       case "text":
+      case "text/plain":
         return <FileText className="h-[30px] w-[30px] text-[#9aa0a6] stroke-[1.5]" />
       default:
         return <File className="h-[30px] w-[30px] text-[#9aa0a6] stroke-[1.5]" />
@@ -35,6 +42,7 @@ export function FileCard({ id, name, type, onContextMenu }: FileCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onContextMenu={(e) => onContextMenu?.(e, id)}
+      onClick={onClick}
     >
       <div className="flex h-full flex-col" style={{ padding: "12px" }}>
         {/* Icon Area */}

@@ -13,14 +13,14 @@ export default async function middleware(req: NextRequest) {
 
   // Check for valid session token in cookies (Edge Runtime compatible)
   // NextAuth v5 uses specific cookie names - check for the actual session token cookie
-  const sessionToken = req.cookies.get("authjs.session-token")?.value || 
+  const sessionToken = req.cookies.get("authjs.session-token")?.value ||
                        req.cookies.get("__Secure-authjs.session-token")?.value ||
                        req.cookies.get("next-auth.session-token")?.value ||
                        req.cookies.get("__Secure-next-auth.session-token")?.value
 
   const isLoggedIn = !!sessionToken
 
-  // Only protect dashboard routes - redirect to home if not logged in
+  // Only protect dashboard routes (including /dashboard/folders/*) - redirect to home if not logged in
   if (isOnDashboard && !isLoggedIn) {
     return NextResponse.redirect(new URL("/", nextUrl))
   }

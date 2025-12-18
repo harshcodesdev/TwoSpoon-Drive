@@ -66,21 +66,24 @@ model File {
   id          String   @id @default(cuid())
   name        String
   type        String   // MIME type
-  size        Int      // Size in bytes
-  path        String   // Storage path (S3 key or local path)
+  size        Int      @default(0) // Size in bytes (0 for folders)
+  path        String?  // Storage path (S3 key or local path) - null for folders
   storageType String   @default("local") // "local" or "s3"
   userId      String
-  parentId    String?  // For folder structure
+  parentId    String?  // For folder structure - null means root level
   isFolder    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime? // Soft delete
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent      File?    @relation("FolderChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children    File[]   @relation("FolderChildren")
   shares      FileShare[]
 
   @@index([userId])
   @@index([parentId])
   @@index([deletedAt])
+  @@index([userId, parentId, deletedAt]) // Composite index for efficient queries
 }
 
 model FileShare {
