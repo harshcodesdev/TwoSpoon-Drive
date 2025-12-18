@@ -6,34 +6,28 @@ export default async function middleware(req: NextRequest) {
   const isOnDashboard = nextUrl.pathname.startsWith("/dashboard")
   const isOnApiAuth = nextUrl.pathname.startsWith("/api/auth")
 
-  // Allow API auth routes
+  // Allow all API auth routes - these handle their own redirects
   if (isOnApiAuth) {
     return NextResponse.next()
   }
 
-  // Check for session token in cookies (Edge Runtime compatible)
-  // NextAuth v5 uses various cookie names depending on configuration
-  const cookies = req.cookies.getAll()
-  const hasSessionCookie = cookies.some(
-    (cookie) =>
-      cookie.name.includes("authjs") ||
-      cookie.name.includes("next-auth") ||
-      cookie.name.includes("session")
-  )
+  // Check for valid session token in cookies (Edge Runtime compatible)
+  // NextAuth v5 uses specific cookie names - check for the actual session token cookie
+  const sessionToken = req.cookies.get("authjs.session-token")?.value || 
+                       req.cookies.get("__Secure-authjs.session-token")?.value ||
+                       req.cookies.get("next-auth.session-token")?.value ||
+                       req.cookies.get("__Secure-next-auth.session-token")?.value
 
-  const isLoggedIn = hasSessionCookie
+  const isLoggedIn = !!sessionToken
 
-  // Protect dashboard routes
-  if (isOnDashboard) {
-    if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/", nextUrl))
-    }
+  // Only protect dashboard routes - redirect to home if not logged in
+  if (isOnDashboard && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/", nextUrl))
   }
 
-  // Redirect logged-in users away from home page
-  if (isLoggedIn && nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl))
-  }
+  // Don't redirect logged-in users away from home page
+  // This prevents redirect loops after logout
+  // Users can manually navigate to dashboard if they want
 
   return NextResponse.next()
 }
@@ -41,4 +35,3 @@ export default async function middleware(req: NextRequest) {
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
 }
-
