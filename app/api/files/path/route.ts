@@ -24,7 +24,12 @@ export async function GET(request: Request) {
 
     while (currentId) {
       // Check if folder exists and user has access (owner or shared)
-      const folder = await prisma.file.findFirst({
+      const folder: {
+        id: string
+        name: string
+        parentId: string | null
+        userId: string
+      } | null = await prisma.file.findFirst({
         where: {
           id: currentId,
           isFolder: true,

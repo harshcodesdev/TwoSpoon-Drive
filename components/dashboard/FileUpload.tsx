@@ -12,7 +12,7 @@ interface FileUploadProps {
 export function FileUpload({ parentId, onUploadComplete, onClose }: FileUploadProps) {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({})
+  const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +26,7 @@ export function FileUpload({ parentId, onUploadComplete, onClose }: FileUploadPr
   }
 
 
-  const uploadFileViaProxy = async (file: File, fileId: string) => {
+  const uploadFileViaProxy = async (file: File, fileIndex: number) => {
     return new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       const formData = new FormData()
@@ -38,7 +38,7 @@ export function FileUpload({ parentId, onUploadComplete, onClose }: FileUploadPr
       xhr.upload.addEventListener("progress", (e) => {
         if (e.lengthComputable) {
           const percentComplete = Math.round((e.loaded / e.total) * 100)
-          setUploadProgress((prev) => ({ ...prev, [fileId]: percentComplete }))
+          setUploadProgress((prev) => ({ ...prev, [fileIndex]: percentComplete }))
         }
       })
 
@@ -85,12 +85,12 @@ export function FileUpload({ parentId, onUploadComplete, onClose }: FileUploadPr
     const errors: string[] = []
 
     try {
-      for (const file of files) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index]
         try {
           // Use proxy upload (avoids CORS issues)
-          const fileId = `temp-${Date.now()}-${Math.random()}`
           console.log(`Uploading ${file.name} via proxy...`)
-          await uploadFileViaProxy(file, fileId)
+          await uploadFileViaProxy(file, index)
           console.log(`Successfully uploaded ${file.name}`)
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error)
@@ -162,9 +162,9 @@ export function FileUpload({ parentId, onUploadComplete, onClose }: FileUploadPr
                     </div>
                     <div className="text-xs text-[#80868b]">
                       {(file.size / 1024 / 1024).toFixed(2)} MB
-                      {uploadProgress[file.id || index] !== undefined && (
+                      {uploadProgress[index] !== undefined && (
                         <span className="ml-2">
-                          - {uploadProgress[file.id || index]}%
+                          - {uploadProgress[index]}%
                         </span>
                       )}
                     </div>

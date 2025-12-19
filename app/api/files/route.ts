@@ -179,9 +179,11 @@ export async function GET(request: Request) {
         })
 
         // Filter by file type category
+        // Note: typeFilter cannot be "folders" here due to the if check above
         const filteredFiles = allFiles.filter((file) => {
+          // Exclude folders when filtering for specific file types
           if (file.isFolder) {
-            return typeFilter === "folders"
+            return false
           }
           return getFileTypeCategory(file.type) === typeFilter
         })

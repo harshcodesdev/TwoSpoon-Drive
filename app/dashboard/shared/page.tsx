@@ -218,19 +218,10 @@ export default function SharedWithMePage() {
         currentFolderId={null}
         onFileContextMenu={handleFileContextMenu}
         onFileClick={handleFileClick}
-        onNavigate={null}
-        onNewFolder={null}
-        onFileUpload={null}
-        onFolderUpload={null}
-        onDownload={handleDownload}
-        onRename={handleRename}
-        onShare={handleShare}
-        onMoveToTrash={null}
         typeFilter={typeFilter}
         onTypeFilterChange={handleTypeFilterChange}
         modifiedFilter={modifiedFilter}
         onModifiedFilterChange={handleModifiedFilterChange}
-        onMove={null}
         isLoading={isLoadingFiles}
       />
       {contextMenuPos && selectedFile && (
@@ -244,9 +235,7 @@ export default function SharedWithMePage() {
             handleDownload(selectedFile.id)
             handleCloseContextMenu()
           }}
-          onDelete={null}
           onRename={() => handleRename(selectedFile.id)}
-          onDuplicate={null}
           onShare={() => handleShare(selectedFile.id)}
         />
       )}
@@ -259,7 +248,7 @@ export default function SharedWithMePage() {
           }}
           currentName={fileToRename.name}
           isFolder={fileToRename.isFolder}
-          onConfirm={handleRenameConfirm}
+          onRename={handleRenameConfirm}
         />
       )}
       {showShareDialog && fileToShare && (

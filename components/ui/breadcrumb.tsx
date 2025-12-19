@@ -43,11 +43,24 @@ const BreadcrumbLink = React.forwardRef<
     asChild?: boolean
   }
 >(({ asChild, className, onClick, ...props }, ref) => {
-  const Comp = asChild ? React.Fragment : onClick ? "button" : "a"
+  if (asChild) {
+    return <React.Fragment />
+  }
+  
+  if (onClick) {
+    return (
+      <button
+        ref={ref as any}
+        onClick={onClick as any}
+        className={cn("transition-colors hover:text-foreground", className)}
+        {...(props as any)}
+      />
+    )
+  }
+  
   return (
-    <Comp
-      ref={ref as any}
-      onClick={onClick}
+    <a
+      ref={ref}
       className={cn("transition-colors hover:text-foreground", className)}
       {...props}
     />

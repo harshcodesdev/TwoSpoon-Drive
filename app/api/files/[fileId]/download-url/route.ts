@@ -7,7 +7,7 @@ import { NextResponse } from "next/server"
 
 export async function GET(
   request: Request,
-  { params }: { params: { fileId: string } }
+  { params }: { params: Promise<{ fileId: string }> | { fileId: string } }
 ) {
   try {
     const session = await auth()
@@ -16,7 +16,9 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { fileId } = params
+    // Handle both Promise and direct params (Next.js 16 compatibility)
+    const resolvedParams = params instanceof Promise ? await params : params
+    const { fileId } = resolvedParams
 
     // Fetch file from database
     const file = await prisma.file.findFirst({
