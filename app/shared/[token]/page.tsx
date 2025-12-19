@@ -108,63 +108,63 @@ export default function SharedFilePage() {
 
   const getFileIcon = () => {
     if (fileInfo?.isFolder) {
-      return <Folder className="h-16 w-16 text-[#8ab4f8]" fill="currentColor" />
+      return <Folder className="h-16 w-16 text-blue-600" fill="currentColor" />
     }
 
     switch (fileInfo?.type) {
       case "application/pdf":
         return (
-          <div className="flex h-16 w-16 items-center justify-center rounded bg-[#ea4335] text-white">
+          <div className="flex h-16 w-16 items-center justify-center rounded bg-red-500 text-white">
             <span className="text-lg font-bold">PDF</span>
           </div>
         )
       case "text/plain":
-        return <FileText className="h-16 w-16 text-[#9aa0a6]" />
+        return <FileText className="h-16 w-16 text-slate-500" />
       default:
-        return <File className="h-16 w-16 text-[#9aa0a6]" />
+        return <File className="h-16 w-16 text-slate-500" />
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0f0f10] to-[#1a1a1a] p-4">
-      <div className="w-full max-w-2xl rounded-lg border border-[#2a2b2f] bg-[#1b1c1f] p-8 shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-white p-4">
+      <div className="w-full max-w-2xl rounded-lg border border-slate-200 bg-white p-8 shadow-2xl">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="mb-4 h-8 w-8 animate-spin text-[#8ab4f8]" />
-            <p className="text-sm text-[#9aa0a6]">Loading shared file...</p>
+            <Loader2 className="mb-4 h-8 w-8 animate-spin text-blue-600" />
+            <p className="text-sm text-slate-600">Loading shared file...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-12">
             <AlertCircle className="mb-4 h-12 w-12 text-red-500" />
-            <h2 className="mb-2 text-xl font-medium text-[#e8eaed]">Error</h2>
-            <p className="text-sm text-[#9aa0a6]">{error}</p>
-            <p className="mt-4 text-xs text-[#5f6368]">
+            <h2 className="mb-2 text-xl font-semibold text-slate-900">Error</h2>
+            <p className="text-sm text-slate-600">{error}</p>
+            <p className="mt-4 text-xs text-slate-500">
               This link may be invalid, expired, or the file may have been deleted.
             </p>
           </div>
         ) : fileInfo ? (
           <>
             <div className="mb-6 flex items-center gap-4">
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-white">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-slate-50">
                 {getFileIcon()}
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className="mb-1 truncate text-2xl font-normal text-[#e8eaed]">
+                <h1 className="mb-1 truncate text-2xl font-semibold text-slate-900">
                   {fileInfo.name}
                 </h1>
                 {fileInfo.ownerName && (
-                  <p className="text-sm text-[#9aa0a6]">Shared by {fileInfo.ownerName}</p>
+                  <p className="text-sm text-slate-600">Shared by {fileInfo.ownerName}</p>
                 )}
                 {fileInfo.size && (
-                  <p className="text-xs text-[#5f6368]">{formatSize(fileInfo.size)}</p>
+                  <p className="text-xs text-slate-500">{formatSize(fileInfo.size)}</p>
                 )}
               </div>
             </div>
 
-            <div className="mb-6 rounded-lg border border-[#2a2b2f] bg-[#0f0f10] p-4">
+            <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-[#e8eaed]">Access level</span>
-                <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-400">
+                <span className="text-sm font-semibold text-slate-900">Access level</span>
+                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
                   {fileInfo.permission === "viewer"
                     ? "Viewer"
                     : fileInfo.permission === "commenter"
@@ -172,7 +172,7 @@ export default function SharedFilePage() {
                     : "Editor"}
                 </span>
               </div>
-              <p className="text-xs text-[#9aa0a6]">
+              <p className="text-xs text-slate-600">
                 {fileInfo.permission === "viewer"
                   ? "You can view this file"
                   : fileInfo.permission === "commenter"
@@ -185,7 +185,7 @@ export default function SharedFilePage() {
               <button
                 onClick={handleDownload}
                 disabled={isDownloading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1a73e8] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#1557b0] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isDownloading ? (
                   <>
@@ -202,8 +202,8 @@ export default function SharedFilePage() {
             )}
 
             {fileInfo.isFolder && (
-              <div className="rounded-lg border border-[#2a2b2f] bg-[#0f0f10] p-4 text-center">
-                <p className="text-sm text-[#9aa0a6]">
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+                <p className="text-sm text-slate-600">
                   Folder sharing is not yet supported. Please contact the owner for access.
                 </p>
               </div>

@@ -175,7 +175,7 @@ export function FileGrid({
 
   return (
     <div
-      className="flex-1 overflow-y-auto bg-[#0f0f10] p-6"
+      className="flex-1 overflow-y-auto bg-slate-50 p-6"
       onDragEnd={handleDragEnd}
       onDragOver={handleRootDragOver}
       onDragLeave={handleRootDragLeave}
@@ -185,11 +185,11 @@ export function FileGrid({
       {breadcrumbPath.length > 0 && (
         <div className="mb-4">
           <Breadcrumb>
-            <BreadcrumbList className="text-[#9aa0a6] text-sm">
+            <BreadcrumbList className="text-slate-500 text-sm">
               <BreadcrumbItem>
                 <BreadcrumbLink
                   onClick={() => onNavigate?.(null)}
-                  className="cursor-pointer hover:text-[#e8eaed] transition-colors text-[#8ab4f8]"
+                  className="cursor-pointer hover:text-slate-900 transition-colors text-blue-600"
                 >
                   My Drive
                 </BreadcrumbLink>
@@ -198,16 +198,16 @@ export function FileGrid({
                 const isLast = index === breadcrumbPath.length - 1
                 return (
                   <div key={item.id} className="flex items-center">
-                    <BreadcrumbSeparator className="text-[#5f6368]">
+                    <BreadcrumbSeparator className="text-slate-400">
                       <ChevronDown className="h-4 w-4 rotate-[-90deg]" />
                     </BreadcrumbSeparator>
                     <BreadcrumbItem>
                       {isLast ? (
-                        <BreadcrumbPage className="text-[#e8eaed] font-normal">{item.name}</BreadcrumbPage>
+                        <BreadcrumbPage className="text-slate-900 font-medium">{item.name}</BreadcrumbPage>
                       ) : (
                         <BreadcrumbLink
                           onClick={() => onNavigate?.(item.id)}
-                          className="cursor-pointer hover:text-[#e8eaed] transition-colors text-[#8ab4f8]"
+                          className="cursor-pointer hover:text-slate-900 transition-colors text-blue-600"
                         >
                           {item.name}
                         </BreadcrumbLink>
@@ -224,7 +224,7 @@ export function FileGrid({
       {/* Header with Filters */}
       <div className="mb-6">
         <div className="mb-4 flex items-center gap-2">
-          <h1 className="text-[22px] font-normal text-[#e8eaed]">
+          <h1 className="text-2xl font-semibold text-slate-900">
             {breadcrumbPath.length > 0 ? breadcrumbPath[breadcrumbPath.length - 1].name : "My Drive"}
           </h1>
           <FolderMenu
@@ -242,9 +242,6 @@ export function FileGrid({
           {onTypeFilterChange && (
             <TypeFilter value={typeFilter} onChange={onTypeFilterChange} />
           )}
-          {/* <select className="h-9 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]">
-            <option>People</option>
-          </select> */}
           {onModifiedFilterChange && (
             <ModifiedFilter value={modifiedFilter} onChange={onModifiedFilterChange} />
           )}
@@ -254,11 +251,11 @@ export function FileGrid({
       {/* Files Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#2a2b2f] border-t-[#8ab4f8]" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
         </div>
       ) : files.length === 0 ? (
         <div className="flex h-64 items-center justify-center">
-          <p className="text-sm text-[#9aa0a6]">
+          <p className="text-sm text-slate-500">
             {typeFilter !== "all" ? `No ${FILE_TYPE_OPTIONS.find((opt) => opt.value === typeFilter)?.label.toLowerCase()} found` : "No files or folders yet"}
           </p>
         </div>
@@ -267,7 +264,7 @@ export function FileGrid({
           {/* Folders Section */}
           {files.filter((f) => f.isFolder).length > 0 && (
             <div className="mb-6">
-              <h2 className="mb-3 text-sm font-medium text-[#e8eaed]">Folders</h2>
+              <h2 className="mb-3 text-sm font-semibold text-slate-700">Folders</h2>
               <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
                 {files
                   .filter((f) => f.isFolder)
@@ -297,7 +294,7 @@ export function FileGrid({
           {files.filter((f) => !f.isFolder).length > 0 && (
             <div className="mb-6">
               {files.filter((f) => f.isFolder).length > 0 && (
-                <h2 className="mb-3 text-sm font-medium text-[#e8eaed]">Files</h2>
+                <h2 className="mb-3 text-sm font-semibold text-slate-700">Files</h2>
               )}
               <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
                 {files

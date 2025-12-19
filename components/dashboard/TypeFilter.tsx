@@ -47,14 +47,14 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-9 items-center gap-2 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]"
+        className="flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-700 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 hover:border-slate-300"
       >
         <span>{selectedOption.label}</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 transition-transform text-slate-500 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-[#dadce0] bg-white shadow-lg">
+        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-slate-200 bg-white shadow-lg">
           {FILE_TYPE_OPTIONS.map((option) => {
             const Icon = option.icon ? iconMap[option.value] : null
             const isSelected = value === option.value
@@ -66,12 +66,12 @@ export function TypeFilter({ value, onChange }: TypeFilterProps) {
                   onChange(option.value as FileTypeCategory)
                   setIsOpen(false)
                 }}
-                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#202124] transition-colors hover:bg-[#f1f3f4] first:rounded-t-lg last:rounded-b-lg ${
-                  isSelected ? "bg-[#e8f0fe] text-[#1a73e8]" : ""
+                className={`flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-900 transition-colors hover:bg-slate-50 first:rounded-t-lg last:rounded-b-lg ${
+                  isSelected ? "bg-blue-50 text-blue-700" : ""
                 }`}
               >
-                {Icon && <Icon className="h-5 w-5 text-[#5f6368] flex-shrink-0" />}
-                <span className="flex-1 text-left">{option.label}</span>
+                {Icon && <Icon className="h-5 w-5 text-slate-500 flex-shrink-0" />}
+                <span className="flex-1 text-left font-medium">{option.label}</span>
               </button>
             )
           })}

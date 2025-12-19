@@ -135,13 +135,13 @@ export function ContextMenu({
   return (
     <>
       <div
-        className="fixed z-50 min-w-[200px] rounded-lg border border-[#2a2b2f] bg-[#1b1c1f] py-1 shadow-xl"
+        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white py-1 shadow-xl"
         style={{ left: x, top: y }}
         onClick={(e) => e.stopPropagation()}
       >
         {menuItems.map((item, index) => {
           if (item.divider) {
-            return <div key={index} className="my-1 border-t border-[#2a2b2f]" />
+            return <div key={index} className="my-1 border-t border-slate-200" />
           }
 
           const Icon = item.icon!
@@ -150,21 +150,21 @@ export function ContextMenu({
           return (
             <button
               key={index}
-              className="flex w-full items-center gap-3 px-4 py-2 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex w-full items-center gap-3 px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={item.onClick}
               disabled={item.disabled || isLoading}
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 shrink-0 text-[#9aa0a6] animate-spin" />
+                <Loader2 className="h-4 w-4 shrink-0 text-slate-500 animate-spin" />
               ) : (
-                <Icon className="h-4 w-4 shrink-0 text-[#9aa0a6]" />
+                <Icon className="h-4 w-4 shrink-0 text-slate-500" />
               )}
-              <span className="flex-1 text-left font-normal">{item.label}</span>
+              <span className="flex-1 text-left font-medium">{item.label}</span>
               {item.hasArrow && (
-                <ChevronRight className="h-4 w-4 -rotate-90 text-[#9aa0a6]" />
+                <ChevronRight className="h-4 w-4 -rotate-90 text-slate-400" />
               )}
               {item.shortcut && !isLoading && (
-                <span className="text-xs text-[#9aa0a6] font-mono">{item.shortcut}</span>
+                <span className="text-xs text-slate-400 font-mono">{item.shortcut}</span>
               )}
             </button>
           )

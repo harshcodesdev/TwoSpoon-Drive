@@ -409,8 +409,8 @@ export default function DashboardPage() {
       {isLoadingFiles ? (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-center">
-            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#2a2b2f] border-t-blue-500 mx-auto" />
-            <p className="text-sm text-[#9aa0a6]">Loading files...</p>
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600 mx-auto" />
+            <p className="text-sm text-slate-600">Loading files...</p>
           </div>
         </div>
       ) : (

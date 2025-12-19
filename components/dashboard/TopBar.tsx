@@ -1,6 +1,6 @@
 "use client"
 
-import { Cloud, Search, Filter, HelpCircle, Settings, Grid3x3, X } from "lucide-react"
+import { Cloud, Search, Filter, HelpCircle, Settings, X } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { UserProfilePopup } from "./UserProfilePopup"
 import { SearchResults } from "./SearchResults"
@@ -60,13 +60,13 @@ export function TopBar({ user }: TopBarProps) {
 
   return (
     <>
-      <header className="flex h-14 items-center border-b border-[#2a2b2f] bg-[#0f0f10] px-6">
+      <header className="flex h-14 items-center border-b border-slate-200 bg-white px-6 shadow-sm">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
             <Cloud className="h-6 w-6 text-white" />
           </div>
-          <span className="text-xl font-normal text-white">TwoSpoonDrive</span>
+          <span className="text-xl font-semibold text-slate-900">TwoSpoonDrive</span>
         </div>
 
         {/* Search Bar */}
@@ -75,7 +75,7 @@ export function TopBar({ user }: TopBarProps) {
           className="relative mx-auto flex flex-1 items-center justify-center max-w-2xl px-8"
         >
           <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9aa0a6]" />
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input
               ref={searchInputRef}
               type="text"
@@ -90,7 +90,7 @@ export function TopBar({ user }: TopBarProps) {
                   setShowSearchResults(true)
                 }
               }}
-              className="h-10 w-full rounded-lg border border-[#2a2b2f] bg-[#1b1c1f] pl-11 pr-20 text-sm text-white placeholder-[#9aa0a6] transition-colors focus:border-[#4285f4] focus:bg-[#2a2b2f] focus:outline-none"
+              className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-11 pr-20 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
             {searchQuery && (
               <button
@@ -98,17 +98,17 @@ export function TopBar({ user }: TopBarProps) {
                   setSearchQuery("")
                   setShowSearchResults(false)
                 }}
-                className="absolute right-12 top-1/2 -translate-y-1/2 rounded-full p-1.5 transition-colors hover:bg-[#2a2b2f]"
+                className="absolute right-12 top-1/2 -translate-y-1/2 rounded-full p-1.5 transition-colors hover:bg-slate-100"
               >
-                <X className="h-4 w-4 text-[#9aa0a6]" />
+                <X className="h-4 w-4 text-slate-400" />
               </button>
             )}
             <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              <kbd className="hidden rounded border border-[#2a2b2f] bg-[#1b1c1f] px-1.5 py-0.5 text-xs text-[#9aa0a6] md:inline">
+              <kbd className="hidden rounded border border-slate-200 bg-white px-1.5 py-0.5 text-xs text-slate-500 md:inline shadow-sm">
                 ⌘K
               </kbd>
-              <button className="rounded-full p-1.5 transition-colors hover:bg-[#2a2b2f]">
-                <Filter className="h-5 w-5 text-[#9aa0a6]" />
+              <button className="rounded-full p-1.5 transition-colors hover:bg-slate-100">
+                <Filter className="h-5 w-5 text-slate-400" />
               </button>
             </div>
           </div>
@@ -123,18 +123,15 @@ export function TopBar({ user }: TopBarProps) {
 
         {/* Right Icons */}
         <div className="flex items-center gap-1">
-          <button className="rounded-full p-2 transition-colors hover:bg-[#1b1c1f]">
-            <HelpCircle className="h-5 w-5 text-[#9aa0a6] hover:text-white" />
+          <button className="rounded-full p-2 transition-colors hover:bg-slate-100">
+            <HelpCircle className="h-5 w-5 text-slate-600 hover:text-slate-900" />
           </button>
-          <button className="rounded-full p-2 transition-colors hover:bg-[#1b1c1f]">
-            <Settings className="h-5 w-5 text-[#9aa0a6] hover:text-white" />
+          <button className="rounded-full p-2 transition-colors hover:bg-slate-100">
+            <Settings className="h-5 w-5 text-slate-600 hover:text-slate-900" />
           </button>
-          {/* <button className="rounded-full p-2 transition-colors hover:bg-[#1b1c1f]">
-            <Grid3x3 className="h-5 w-5 text-[#9aa0a6] hover:text-white" />
-          </button> */}
           <button
             onClick={() => setShowProfilePopup(!showProfilePopup)}
-            className="ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white text-sm font-medium hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer overflow-hidden"
+            className="ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white text-sm font-medium hover:ring-2 hover:ring-blue-300 transition-all cursor-pointer overflow-hidden shadow-sm"
           >
             {user?.image && !imageError ? (
               <Image

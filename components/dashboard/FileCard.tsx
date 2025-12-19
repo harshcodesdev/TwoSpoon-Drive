@@ -1,7 +1,8 @@
 "use client"
 
-import { FileText, File, MoreVertical, Folder } from "lucide-react"
+import { FileText, File, MoreVertical, Folder, Table, Presentation, Video, Image, Archive, Music } from "lucide-react"
 import { useState } from "react"
+import { getFileTypeCategory } from "@/lib/fileTypes"
 
 interface FileCardProps {
   id: string
@@ -165,24 +166,169 @@ export function FileCard({
     setTimeout(() => setWasDragged(false), 100)
   }
 
-  const getIcon = () => {
+  const getFileExtension = (filename: string): string => {
+    const parts = filename.split(".")
+    return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : ""
+  }
+
+  const getFileTypeIcon = () => {
     if (isFolder) {
-      return <Folder className="h-[30px] w-[30px] text-[#8ab4f8]" fill="currentColor" />
+      return {
+        icon: Folder,
+        bgColor: "bg-blue-50",
+        iconColor: "text-blue-600",
+        fill: true,
+      }
     }
 
-    switch (type) {
-      case "pdf":
-        return (
-          <div className="flex h-[30px] w-[30px] items-center justify-center rounded bg-[#ea4335] text-white">
-            <span className="text-[10px] font-bold">PDF</span>
-          </div>
-        )
-      case "text":
-      case "text/plain":
-        return <FileText className="h-[30px] w-[30px] text-[#9aa0a6] stroke-[1.5]" />
-      default:
-        return <File className="h-[30px] w-[30px] text-[#9aa0a6] stroke-[1.5]" />
+    const extension = getFileExtension(name)
+    const mimeType = type || ""
+    const category = getFileTypeCategory(mimeType)
+
+    // PDF files
+    if (extension === "pdf" || mimeType === "application/pdf" || category === "pdfs") {
+      return {
+        icon: File,
+        bgColor: "bg-red-100",
+        iconColor: "text-red-600",
+        label: "PDF",
+        fill: false,
+      }
     }
+
+    // Documents (doc, docx, txt, rtf, odt)
+    if (
+      category === "documents" ||
+      ["doc", "docx", "txt", "rtf", "odt"].includes(extension)
+    ) {
+      return {
+        icon: FileText,
+        bgColor: "bg-blue-100",
+        iconColor: "text-blue-600",
+        label: extension.toUpperCase() || "DOC",
+        fill: false,
+      }
+    }
+
+    // Spreadsheets (xls, xlsx, csv, ods)
+    if (
+      category === "spreadsheets" ||
+      ["xls", "xlsx", "csv", "ods"].includes(extension)
+    ) {
+      return {
+        icon: Table,
+        bgColor: "bg-green-100",
+        iconColor: "text-green-600",
+        label: extension.toUpperCase() || "XLS",
+        fill: false,
+      }
+    }
+
+    // Presentations (ppt, pptx, odp)
+    if (
+      category === "presentations" ||
+      ["ppt", "pptx", "odp"].includes(extension)
+    ) {
+      return {
+        icon: Presentation,
+        bgColor: "bg-orange-100",
+        iconColor: "text-orange-600",
+        label: extension.toUpperCase() || "PPT",
+        fill: false,
+      }
+    }
+
+    // Videos
+    if (category === "videos" || ["mp4", "avi", "mov", "wmv", "flv", "mkv", "webm"].includes(extension)) {
+      return {
+        icon: Video,
+        bgColor: "bg-purple-100",
+        iconColor: "text-purple-600",
+        label: extension.toUpperCase() || "VID",
+        fill: false,
+      }
+    }
+
+    // Photos/Images
+    if (
+      category === "photos" ||
+      ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp", "ico"].includes(extension)
+    ) {
+      return {
+        icon: Image,
+        bgColor: "bg-pink-100",
+        iconColor: "text-pink-600",
+        label: extension.toUpperCase() || "IMG",
+        fill: false,
+      }
+    }
+
+    // Audio files
+    if (
+      category === "audio" ||
+      ["mp3", "wav", "flac", "aac", "ogg", "m4a", "wma"].includes(extension)
+    ) {
+      return {
+        icon: Music,
+        bgColor: "bg-indigo-100",
+        iconColor: "text-indigo-600",
+        label: extension.toUpperCase() || "AUD",
+        fill: false,
+      }
+    }
+
+    // Archives
+    if (
+      category === "archives" ||
+      ["zip", "rar", "7z", "tar", "gz", "bz2"].includes(extension)
+    ) {
+      return {
+        icon: Archive,
+        bgColor: "bg-amber-100",
+        iconColor: "text-amber-600",
+        label: extension.toUpperCase() || "ZIP",
+        fill: false,
+      }
+    }
+
+    // Default file
+    return {
+      icon: File,
+      bgColor: "bg-slate-100",
+      iconColor: "text-slate-600",
+      label: extension.toUpperCase() || "FILE",
+      fill: false,
+    }
+  }
+
+  const getIcon = () => {
+    const fileType = getFileTypeIcon()
+    const IconComponent = fileType.icon
+
+    if (isFolder) {
+      return (
+        <IconComponent
+          className={`h-[30px] w-[30px] ${fileType.iconColor}`}
+          fill="currentColor"
+        />
+      )
+    }
+
+    // Show label for PDF and other document types
+    if (fileType.label && ["PDF", "DOC", "DOCX", "XLS", "XLSX", "PPT", "PPTX"].includes(fileType.label)) {
+      return (
+        <div className={`flex h-[30px] w-[30px] items-center justify-center rounded-md ${fileType.bgColor} border border-white/50 shadow-sm`}>
+          <span className={`text-[9px] font-bold ${fileType.iconColor}`}>{fileType.label}</span>
+        </div>
+      )
+    }
+
+    // Show icon with colored background for other file types
+    return (
+      <div className={`flex h-[30px] w-[30px] items-center justify-center rounded-md ${fileType.bgColor} border border-white/50 shadow-sm`}>
+        <IconComponent className={`h-5 w-5 ${fileType.iconColor}`} />
+      </div>
+    )
   }
 
   return (
@@ -195,10 +341,10 @@ export function FileCard({
       onDragEnd={handleDragEnd}
       className={`group relative cursor-pointer rounded-lg border transition-all ${
         isDragging
-          ? "opacity-50 border-[#4285f4]"
+          ? "opacity-50 border-blue-500"
           : isDragOver
-          ? "border-[#4285f4] border-2 bg-[#1b1c1f] shadow-lg ring-2 ring-[#4285f4] ring-opacity-50"
-          : "border-[#2a2b2f] bg-[#1b1c1f] hover:border-[#4285f4] hover:shadow-sm"
+          ? "border-blue-500 border-2 bg-blue-50 shadow-lg ring-2 ring-blue-500 ring-opacity-50"
+          : "border-slate-200 bg-white hover:border-blue-500 hover:shadow-md"
       }`}
       style={{ width: "260px", height: "110px", borderRadius: "8px" }}
       onMouseEnter={() => setIsHovered(true)}
@@ -208,23 +354,23 @@ export function FileCard({
     >
       <div className="flex h-full flex-col" style={{ padding: "12px" }}>
         {/* Icon Area */}
-        <div className="relative mb-3 flex h-[60px] w-full items-center justify-center rounded bg-white">
+        <div className="relative mb-3 flex h-[60px] w-full items-center justify-center rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200/50">
           {getIcon()}
           <button
             className={`absolute right-1.5 top-1.5 rounded-full p-1 transition-all ${
               isHovered ? "opacity-100" : "opacity-0"
-            } hover:bg-[#f1f3f4]`}
+            } hover:bg-white/80 backdrop-blur-sm shadow-sm`}
             onClick={(e) => {
               e.stopPropagation()
               onContextMenu?.(e, id)
             }}
           >
-            <MoreVertical className="h-4 w-4 text-[#5f6368]" />
+            <MoreVertical className="h-4 w-4 text-slate-600" />
           </button>
         </div>
         {/* File Name */}
         <div className="flex-1 flex items-end">
-          <div className="truncate text-left text-[13px] font-medium leading-[1.3] text-[#e8eaed]">
+          <div className="truncate text-left text-[13px] font-medium leading-[1.3] text-slate-900">
             {name}
           </div>
         </div>

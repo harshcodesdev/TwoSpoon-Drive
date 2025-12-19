@@ -59,10 +59,10 @@ export default function DashboardLayout({
   // Show loading state or redirect if no user
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0f0f10] text-white">
+      <div className="flex h-screen items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#2a2b2f] border-t-blue-500 mx-auto" />
-          <p className="text-sm text-[#9aa0a6]">Loading...</p>
+          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600 mx-auto" />
+          <p className="text-sm text-slate-600">Loading...</p>
         </div>
       </div>
     )
@@ -73,7 +73,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen flex-col bg-[#0f0f10] text-white">
+    <div className="flex h-screen flex-col bg-slate-50">
       <TopBar user={user} />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar

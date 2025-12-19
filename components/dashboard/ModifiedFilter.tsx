@@ -96,23 +96,23 @@ export function ModifiedFilter({ value, onChange }: ModifiedFilterProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex h-9 items-center gap-2 rounded-md border px-3 text-xs transition-colors focus:outline-none ${
+        className={`flex h-9 items-center gap-2 rounded-md border px-3 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
           isOpen
-            ? "border-[#4285f4] bg-[#1b1c1f] text-[#8ab4f8]"
-            : "border-[#2a2b2f] bg-[#1b1c1f] text-[#e8eaed] hover:border-[#3c3c3c]"
+            ? "border-blue-500 bg-white text-blue-700"
+            : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
         }`}
       >
         <span>{getDisplayLabel()}</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 transition-transform text-slate-500 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-[#dadce0] bg-white shadow-lg">
+        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-slate-200 bg-white shadow-lg">
           {/* Header */}
-          <div className="border-b border-[#dadce0] bg-[#f8f9fa] px-4 py-2">
+          <div className="border-b border-slate-200 bg-slate-50 px-4 py-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-[#202124]">Modified</span>
-              <ChevronDown className="h-4 w-4 text-[#5f6368]" />
+              <span className="text-sm font-semibold text-slate-900">Modified</span>
+              <ChevronDown className="h-4 w-4 text-slate-500" />
             </div>
           </div>
 
@@ -131,13 +131,13 @@ export function ModifiedFilter({ value, onChange }: ModifiedFilterProps) {
                       setPendingValue(option.value)
                     }
                   }}
-                  className={`flex w-full items-center justify-between px-4 py-2.5 text-sm text-[#202124] transition-colors hover:bg-[#f1f3f4] ${
-                    isSelected ? "bg-[#e8f0fe] text-[#1a73e8]" : ""
+                  className={`flex w-full items-center justify-between px-4 py-2.5 text-sm text-slate-900 transition-colors hover:bg-slate-50 ${
+                    isSelected ? "bg-blue-50 text-blue-700" : ""
                   }`}
                 >
-                  <span className="flex-1 text-left">{option.label}</span>
+                  <span className="flex-1 text-left font-medium">{option.label}</span>
                   {option.hasArrow && (
-                    <ChevronRight className="h-4 w-4 text-[#5f6368]" />
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
                   )}
                 </button>
               )
@@ -145,24 +145,24 @@ export function ModifiedFilter({ value, onChange }: ModifiedFilterProps) {
           </div>
 
           {/* Footer */}
-          <div className="border-t border-[#dadce0] px-4 py-2">
+          <div className="border-t border-slate-200 px-4 py-2">
             <div className="flex items-center justify-between">
               <button
                 onClick={handleClearAll}
-                className="text-sm text-[#5f6368] hover:text-[#202124] transition-colors"
+                className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
               >
                 Clear all
               </button>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCancel}
-                  className="rounded px-3 py-1.5 text-sm font-medium text-[#1a73e8] hover:bg-[#f1f3f4] transition-colors"
+                  className="rounded px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-slate-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleApply}
-                  className="rounded px-3 py-1.5 text-sm font-medium text-[#202124] hover:bg-[#f1f3f4] transition-colors"
+                  className="rounded px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors"
                 >
                   Apply
                 </button>

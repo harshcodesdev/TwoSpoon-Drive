@@ -91,7 +91,7 @@ export function Sidebar({ onNewFolder, onFileUpload, onFolderUpload }: SidebarPr
   }
 
   return (
-    <aside className="w-[240px] border-r border-[#2a2b2f] bg-[#0f0f10] p-3">
+    <aside className="w-[240px] border-r border-slate-200 bg-white p-3">
       {/* New Button with Menu */}
       <div className="mb-3">
         <NewFileMenu
@@ -111,14 +111,14 @@ export function Sidebar({ onNewFolder, onFileUpload, onFolderUpload }: SidebarPr
               onClick={() => handleNavClick(item)}
               className={`flex cursor-pointer w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
                 item.active
-                  ? "bg-[#2a2b2f] text-[#8ab4f8]"
-                  : "text-[#e8eaed] hover:bg-[#1b1c1f]"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-slate-700 hover:bg-slate-50"
               }`}
             >
-              <Icon className={`h-5 w-5 shrink-0 ${item.active ? "text-[#8ab4f8]" : "text-[#9aa0a6]"}`} />
-              <span className="flex-1 text-left font-normal">{item.label}</span>
+              <Icon className={`h-5 w-5 shrink-0 ${item.active ? "text-blue-600" : "text-slate-500"}`} />
+              <span className="flex-1 text-left font-medium">{item.label}</span>
               {item.collapsed && (
-                <ChevronRight className="h-4 w-4 text-[#9aa0a6]" />
+                <ChevronRight className="h-4 w-4 text-slate-400" />
               )}
             </button>
           )
@@ -126,47 +126,38 @@ export function Sidebar({ onNewFolder, onFileUpload, onFolderUpload }: SidebarPr
       </nav>
 
       {/* Storage Section */}
-      <div className="mt-6 rounded-lg border border-[#2a2b2f] bg-[#1b1c1f] p-4">
+      <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
         <div className="mb-2 flex items-center gap-2">
-          <HardDrive className="h-4 w-4 text-[#9aa0a6]" />
-          <span className="text-xs font-medium text-[#e8eaed]">Storage</span>
+          <HardDrive className="h-4 w-4 text-slate-500" />
+          <span className="text-xs font-medium text-slate-900">Storage</span>
           {storageStats && (
-            <span className="text-xs text-[#9aa0a6]">
+            <span className="text-xs text-slate-500">
               ({Math.round(storageStats.percentage)}% full)
             </span>
           )}
         </div>
         {isLoadingStorage ? (
-          <div className="mb-2 text-xs text-[#9aa0a6]">Loading...</div>
+          <div className="mb-2 text-xs text-slate-500">Loading...</div>
         ) : storageStats ? (
           <>
-            <div className="mb-2 text-xs text-[#9aa0a6]">
+            <div className="mb-2 text-xs text-slate-600">
               {storageStats.formatted.used} of {storageStats.formatted.limit} used
             </div>
-            <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-[#0f0f10]">
+            <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
               <div
                 className={`h-full transition-all ${
                   storageStats.percentage >= 90
-                    ? "bg-[#f28b82]"
+                    ? "bg-red-500"
                     : storageStats.percentage >= 75
-                    ? "bg-[#fbbc04]"
-                    : "bg-[#34a853]"
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
                 }`}
                 style={{ width: `${Math.min(100, storageStats.percentage)}%` }}
               />
             </div>
-            {/* {storageStats.percentage >= 100 ? (
-              <div className="w-full rounded-lg border border-[#f28b82] bg-transparent px-3 py-2 text-xs font-medium text-[#f28b82] text-center">
-                Storage full
-              </div>
-            ) : (
-              <button className="w-full rounded-lg border border-[#2a2b2f] bg-transparent px-3 py-2 text-xs font-medium text-[#f28b82] transition-colors hover:bg-[#2a2b2f]">
-                Get more storage
-              </button>
-            )} */}
           </>
         ) : (
-          <div className="mb-2 text-xs text-[#9aa0a6]">Unable to load storage</div>
+          <div className="mb-2 text-xs text-slate-500">Unable to load storage</div>
         )}
       </div>
     </aside>

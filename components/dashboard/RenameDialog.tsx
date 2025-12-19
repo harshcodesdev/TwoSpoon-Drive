@@ -82,19 +82,19 @@ export function RenameDialog({
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div
-          className="w-full max-w-md rounded-lg border border-[#2a2b2f] bg-[#1b1c1f] p-6 shadow-2xl"
+          className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-normal text-[#e8eaed]">
+            <h2 className="text-xl font-semibold text-slate-900">
               Rename {isFolder ? "folder" : "file"}
             </h2>
             <button
               onClick={onClose}
               disabled={isRenaming}
-              className="rounded-full p-1 transition-colors hover:bg-[#2a2b2f] disabled:opacity-50"
+              className="rounded-full p-1 transition-colors hover:bg-slate-100 disabled:opacity-50"
             >
-              <X className="h-5 w-5 text-[#9aa0a6]" />
+              <X className="h-5 w-5 text-slate-500" />
             </button>
           </div>
 
@@ -106,12 +106,12 @@ export function RenameDialog({
               onChange={(e) => setNewName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isFolder ? "Folder name" : "File name"}
-              className="w-full rounded-lg border-2 border-[#4285f4] bg-[#0f0f10] px-4 py-3 text-sm text-[#e8eaed] placeholder-[#9aa0a6] focus:outline-none focus:ring-2 focus:ring-[#4285f4]"
+              className="w-full rounded-lg border-2 border-blue-500 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               autoFocus
               disabled={isRenaming}
             />
             {!isFolder && currentName.includes(".") && (
-              <p className="mt-2 text-xs text-[#9aa0a6]">
+              <p className="mt-2 text-xs text-slate-500">
                 Extension will be preserved: {currentName.substring(currentName.lastIndexOf("."))}
               </p>
             )}
@@ -121,14 +121,14 @@ export function RenameDialog({
             <button
               onClick={onClose}
               disabled={isRenaming}
-              className="rounded-lg px-4 py-2 text-sm font-medium text-[#8ab4f8] transition-colors hover:bg-[#2a2b2f] disabled:opacity-50"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleRename}
               disabled={!newName.trim() || isRenaming}
-              className="rounded-lg bg-[#4285f4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#357ae8] disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isRenaming ? "Renaming..." : "Rename"}
             </button>

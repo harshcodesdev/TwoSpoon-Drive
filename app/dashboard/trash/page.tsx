@@ -108,16 +108,16 @@ export default function TrashPage() {
       {isLoadingFiles ? (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-center">
-            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#2a2b2f] border-t-blue-500 mx-auto" />
-            <p className="text-sm text-[#9aa0a6]">Loading trash...</p>
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600 mx-auto" />
+            <p className="text-sm text-slate-600">Loading trash...</p>
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-y-auto bg-[#0f0f10] p-6">
+        <div className="flex-1 overflow-y-auto bg-slate-50 p-6">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-[22px] font-normal text-[#e8eaed] mb-4">Trash</h1>
-            <p className="text-sm text-[#9aa0a6]">
+            <h1 className="text-2xl font-semibold text-slate-900 mb-4">Trash</h1>
+            <p className="text-sm text-slate-600">
               Items in trash are deleted after 30 days. Empty trash to free up space.
             </p>
           </div>
@@ -141,7 +141,7 @@ export default function TrashPage() {
                   ))}
               </div>
               {files.filter((f) => f.isFolder).length > 0 && (
-                <h2 className="mb-3 text-sm font-medium text-[#e8eaed]">Files</h2>
+                <h2 className="mb-3 text-sm font-semibold text-slate-700">Files</h2>
               )}
               <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
                 {files
@@ -161,7 +161,7 @@ export default function TrashPage() {
             </>
           ) : (
             <div className="flex h-64 items-center justify-center">
-              <p className="text-sm text-[#9aa0a6]">Trash is empty</p>
+              <p className="text-sm text-slate-500">Trash is empty</p>
             </div>
           )}
         </div>

@@ -118,25 +118,25 @@ export function FolderMenu({
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="rounded-full p-1 transition-colors hover:bg-[#1b1c1f]"
+        className="rounded-full p-1 transition-colors hover:bg-slate-100"
       >
-        <ChevronDown className="h-5 w-5 text-[#9aa0a6]" />
+        <ChevronDown className="h-5 w-5 text-slate-500" />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-72 rounded-lg border border-[#dadce0] bg-white shadow-lg">
+        <div className="absolute left-0 top-full z-50 mt-1 w-72 rounded-lg border border-slate-200 bg-white shadow-lg">
           {menuItems.map((item, index) => {
             const Icon = item.icon
             return (
               <button
                 key={index}
                 onClick={item.onClick}
-                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#202124] transition-colors hover:bg-[#f1f3f4] first:rounded-t-lg last:rounded-b-lg"
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-slate-900 transition-colors hover:bg-slate-50 first:rounded-t-lg last:rounded-b-lg"
               >
-                <Icon className="h-5 w-5 text-[#5f6368] flex-shrink-0" />
-                <span className="flex-1 text-left">{item.label}</span>
+                <Icon className="h-5 w-5 text-slate-500 flex-shrink-0" />
+                <span className="flex-1 text-left font-medium">{item.label}</span>
                 {item.shortcut && (
-                  <span className="text-xs text-[#80868b] font-mono">{item.shortcut}</span>
+                  <span className="text-xs text-slate-400 font-mono">{item.shortcut}</span>
                 )}
               </button>
             )

@@ -1,6 +1,6 @@
 "use client"
 
-import { FolderPlus, Upload, FolderUp, ChevronRight } from "lucide-react"
+import { FolderPlus, Upload, FolderUp, ChevronRight, Plus } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
 interface NewFileMenuProps {
@@ -63,9 +63,9 @@ export function NewFileMenu({ onNewFolder, onFileUpload, onFolderUpload }: NewFi
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-[#0f0f10] transition-colors hover:bg-gray-100"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-slate-900 shadow-sm transition-all hover:shadow-md hover:bg-slate-50"
       >
-        <span className="text-lg">+</span>
+        <Plus className="h-4 w-4 text-slate-900" strokeWidth={2.5} />
         <span>New</span>
       </button>
 
