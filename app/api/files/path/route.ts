@@ -23,10 +23,10 @@ export async function GET(request: Request) {
     let currentId: string | null = folderId
 
     while (currentId) {
+      // Check if folder exists and user has access (owner or shared)
       const folder = await prisma.file.findFirst({
         where: {
           id: currentId,
-          userId: session.user.id,
           isFolder: true,
           deletedAt: null,
         },
@@ -34,10 +34,32 @@ export async function GET(request: Request) {
           id: true,
           name: true,
           parentId: true,
+          userId: true,
         },
       })
 
       if (!folder) {
+        break
+      }
+
+      // Check if user is owner or has shared access
+      const isOwner = folder.userId === session.user.id
+      let hasAccess = isOwner
+
+      if (!isOwner && session.user.email) {
+        const share = await prisma.fileShare.findFirst({
+          where: {
+            fileId: currentId,
+            OR: [
+              { sharedWithUserId: session.user.id },
+              { sharedWithEmail: session.user.email.toLowerCase() },
+            ],
+          },
+        })
+        hasAccess = !!share
+      }
+
+      if (!hasAccess) {
         break
       }
 

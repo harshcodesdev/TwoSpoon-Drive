@@ -62,15 +62,15 @@ export function FolderMenu({
         onFileUpload()
       },
     },
-    {
-      icon: FolderUp,
-      label: "Folder upload",
-      shortcut: "Alt+C then I",
-      onClick: () => {
-        setIsOpen(false)
-        onFolderUpload()
-      },
-    },
+    // {
+    //   icon: FolderUp,
+    //   label: "Folder upload",
+    //   shortcut: "Alt+C then I",
+    //   onClick: () => {
+    //     setIsOpen(false)
+    //     onFolderUpload()
+    //   },
+    // },
   ]
 
   const folderSpecificItems = [

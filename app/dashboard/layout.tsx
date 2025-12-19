@@ -46,8 +46,9 @@ export default function DashboardLayout({
   }, [router])
 
   const handleFileUpload = () => {
-    // TODO: Implement file upload
-    console.log("File upload clicked")
+    // Dispatch event to page components
+    const event = new CustomEvent("dashboard:fileUpload")
+    window.dispatchEvent(event)
   }
 
   const handleFolderUpload = () => {

@@ -17,11 +17,11 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="mx-auto max-w-4xl text-center">
             {/* Floating Header Card in Middle */}
-            {/* <motion.header
+            <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mb-16"
+              className="mb-16 relative bottom-20"
             >
               <div className="mx-auto inline-flex rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-md shadow-lg px-10 py-4 items-center justify-between gap-12 w-full max-w-[950px]">
                 <div className="flex items-center gap-2">
@@ -43,7 +43,7 @@ export default function Home() {
                   </Button>
                 </nav>
               </div>
-            </motion.header> */}
+            </motion.header>
 
             {/* Icon */}
             <motion.div

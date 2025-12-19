@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { User, LogOut, Settings, CreditCard, HelpCircle } from "lucide-react"
 import { signOut } from "next-auth/react"
 
@@ -13,11 +14,18 @@ interface UserProfilePopupProps {
 }
 
 export function UserProfilePopup({ user, onClose }: UserProfilePopupProps) {
+  const [imageError, setImageError] = useState(false)
+
   const handleSignOut = async () => {
     await signOut({ redirectTo: "/" })
   }
 
   const userInitial = user.name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"
+
+  // Reset image error when user changes
+  useEffect(() => {
+    setImageError(false)
+  }, [user?.image])
 
   return (
     <>
@@ -28,19 +36,20 @@ export function UserProfilePopup({ user, onClose }: UserProfilePopupProps) {
         {/* User Info Section */}
         <div className="border-b border-[#2a2b2f] p-4">
           <div className="flex items-center gap-3">
-            {user.image ? (
-              <div className="relative h-12 w-12 overflow-hidden rounded-full">
+            <div className="relative h-12 w-12 overflow-hidden rounded-full bg-blue-500 flex items-center justify-center">
+              {user.image && !imageError ? (
                 <img
                   src={user.image}
                   alt={user.name || "User"}
                   className="h-full w-full object-cover"
+                  onError={() => setImageError(true)}
                 />
-              </div>
-            ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-white text-lg font-medium">
-                {userInitial}
-              </div>
-            )}
+              ) : (
+                <span className="text-white text-lg font-medium">
+                  {userInitial}
+                </span>
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <div className="truncate text-sm font-medium text-[#e8eaed]">
                 {user.name || "User"}
@@ -52,22 +61,22 @@ export function UserProfilePopup({ user, onClose }: UserProfilePopupProps) {
 
         {/* Menu Items */}
         <div className="py-2">
-          <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
+          {/* <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
             <User className="h-5 w-5 text-[#9aa0a6]" />
             <span>Manage your Google Account</span>
-          </button>
+          </button> */}
           <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
             <Settings className="h-5 w-5 text-[#9aa0a6]" />
             <span>Settings</span>
           </button>
-          <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
+          {/* <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
             <CreditCard className="h-5 w-5 text-[#9aa0a6]" />
             <span>Billing & plans</span>
-          </button>
-          <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
+          </button> */}
+          {/* <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#e8eaed] transition-colors hover:bg-[#2a2b2f]">
             <HelpCircle className="h-5 w-5 text-[#9aa0a6]" />
             <span>Help & support</span>
-          </button>
+          </button> */}
         </div>
 
         {/* Divider */}

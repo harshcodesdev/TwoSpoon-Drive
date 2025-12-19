@@ -48,15 +48,15 @@ export function NewFileMenu({ onNewFolder, onFileUpload, onFolderUpload }: NewFi
         onFileUpload()
       },
     },
-    {
-      icon: FolderUp,
-      label: "Folder upload",
-      shortcut: "Alt+C then I",
-      onClick: () => {
-        setIsOpen(false)
-        onFolderUpload()
-      },
-    },
+    // {
+    //   icon: FolderUp,
+    //   label: "Folder upload",
+    //   shortcut: "Alt+C then I",
+    //   onClick: () => {
+    //     setIsOpen(false)
+    //     onFolderUpload()
+    //   },
+    // },
   ]
 
   return (

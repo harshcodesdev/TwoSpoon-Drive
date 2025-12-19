@@ -5,9 +5,16 @@ export default async function middleware(req: NextRequest) {
   const { nextUrl } = req
   const isOnDashboard = nextUrl.pathname.startsWith("/dashboard")
   const isOnApiAuth = nextUrl.pathname.startsWith("/api/auth")
+  const isOnShared = nextUrl.pathname.startsWith("/shared")
+  const isOnApiShared = nextUrl.pathname.startsWith("/api/shared")
 
   // Allow all API auth routes - these handle their own redirects
   if (isOnApiAuth) {
+    return NextResponse.next()
+  }
+
+  // Allow public shared file routes (no authentication required)
+  if (isOnShared || isOnApiShared) {
     return NextResponse.next()
   }
 

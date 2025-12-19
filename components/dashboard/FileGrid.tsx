@@ -1,8 +1,12 @@
 "use client"
 
+import { useState, useRef } from "react"
 import { FileCard } from "./FileCard"
 import { FolderMenu } from "./FolderMenu"
+import { TypeFilter } from "./TypeFilter"
+import { ModifiedFilter, ModifiedFilterOption } from "./ModifiedFilter"
 import { ChevronDown } from "lucide-react"
+import { FileTypeCategory, FILE_TYPE_OPTIONS } from "@/lib/fileTypes"
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -17,6 +21,7 @@ interface File {
   name: string
   type?: string | null
   isFolder: boolean
+  isStarred?: boolean
 }
 
 interface BreadcrumbItem {
@@ -38,6 +43,13 @@ interface FileGridProps {
   onRename?: () => void
   onShare?: () => void
   onMoveToTrash?: () => void
+  onStar?: (fileId: string, isStarred: boolean) => void
+  typeFilter?: FileTypeCategory
+  onTypeFilterChange?: (type: FileTypeCategory) => void
+  modifiedFilter?: ModifiedFilterOption | null
+  onModifiedFilterChange?: (filter: ModifiedFilterOption | null) => void
+  onMove?: (fileId: string, targetFolderId: string | null) => void
+  isLoading?: boolean
 }
 
 export function FileGrid({
@@ -54,9 +66,121 @@ export function FileGrid({
   onRename,
   onShare,
   onMoveToTrash,
+  onStar,
+  typeFilter = "all",
+  onTypeFilterChange,
+  modifiedFilter = null,
+  onModifiedFilterChange,
+  onMove,
+  isLoading = false,
 }: FileGridProps) {
+  const [draggedFileId, setDraggedFileId] = useState<string | null>(null)
+  const [draggedIsFolder, setDraggedIsFolder] = useState<boolean>(false)
+  const [dragOverFileId, setDragOverFileId] = useState<string | null>(null)
+
+  const handleDragStart = (e: React.DragEvent, fileId: string, isFolder: boolean) => {
+    setDraggedFileId(fileId)
+    setDraggedIsFolder(isFolder)
+    e.dataTransfer.effectAllowed = "move"
+    e.dataTransfer.setData("text/plain", JSON.stringify({ id: fileId, isFolder }))
+  }
+
+  const handleDragOver = (e: React.DragEvent, fileId: string, isFolder: boolean) => {
+    // Clear any pending drag leave timeout since we're still dragging over
+    if (dragLeaveTimeoutRef.current) {
+      clearTimeout(dragLeaveTimeoutRef.current)
+      dragLeaveTimeoutRef.current = null
+    }
+    
+    // Only highlight folders (and not the dragged item itself)
+    if (isFolder && fileId !== draggedFileId && draggedFileId) {
+      setDragOverFileId(fileId)
+    } else if (!isFolder || fileId === draggedFileId) {
+      // Clear if dragging over a file or the dragged item itself
+      if (dragOverFileId === fileId) {
+        setDragOverFileId(null)
+      }
+    }
+  }
+
+  const dragLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Clear any existing timeout
+    if (dragLeaveTimeoutRef.current) {
+      clearTimeout(dragLeaveTimeoutRef.current)
+    }
+    
+    // Use a small timeout to debounce - sometimes dragleave fires when moving to child elements
+    // The dragover event will fire again if we're still over the element
+    dragLeaveTimeoutRef.current = setTimeout(() => {
+      setDragOverFileId(null)
+      dragLeaveTimeoutRef.current = null
+    }, 50)
+  }
+
+  const handleDrop = async (e: React.DragEvent, fileId: string, isFolder: boolean) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!isFolder || !draggedFileId || fileId === draggedFileId) {
+      setDragOverFileId(null)
+      setDraggedFileId(null)
+      return
+    }
+
+    if (onMove) {
+      await onMove(draggedFileId, fileId)
+    }
+
+    setDragOverFileId(null)
+    setDraggedFileId(null)
+  }
+
+  const handleDragEnd = () => {
+    setDragOverFileId(null)
+    setDraggedFileId(null)
+  }
+  const handleRootDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // Clear any folder highlight when dragging over root area
+    setDragOverFileId(null)
+    // Allow dropping on root area
+    e.dataTransfer.dropEffect = "move"
+  }
+
+  const handleRootDrop = async (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!draggedFileId) return
+
+    // Move to root (parentId = null)
+    if (onMove) {
+      await onMove(draggedFileId, null)
+    }
+
+    setDragOverFileId(null)
+    setDraggedFileId(null)
+  }
+
+  const handleRootDragLeave = (e: React.DragEvent) => {
+    // Only clear if we're actually leaving the root area
+    const relatedTarget = e.relatedTarget as HTMLElement
+    if (!relatedTarget || !(e.currentTarget as HTMLElement).contains(relatedTarget)) {
+      // Don't clear dragOverFileId here - let individual cards handle it
+    }
+  }
+
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0f0f10] p-6">
+    <div
+      className="flex-1 overflow-y-auto bg-[#0f0f10] p-6"
+      onDragEnd={handleDragEnd}
+      onDragOver={handleRootDragOver}
+      onDragLeave={handleRootDragLeave}
+      onDrop={handleRootDrop}
+    >
       {/* Breadcrumb Navigation */}
       {breadcrumbPath.length > 0 && (
         <div className="mb-4">
@@ -115,37 +239,91 @@ export function FileGrid({
           />
         </div>
         <div className="flex items-center gap-2">
-          <select className="h-9 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]">
-            <option>Type</option>
-          </select>
-          <select className="h-9 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]">
+          {onTypeFilterChange && (
+            <TypeFilter value={typeFilter} onChange={onTypeFilterChange} />
+          )}
+          {/* <select className="h-9 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]">
             <option>People</option>
-          </select>
-          <select className="h-9 rounded-md border border-[#2a2b2f] bg-[#1b1c1f] px-3 text-xs text-[#e8eaed] transition-colors focus:border-[#4285f4] focus:outline-none hover:border-[#3c3c3c]">
-            <option>Modified</option>
-          </select>
+          </select> */}
+          {onModifiedFilterChange && (
+            <ModifiedFilter value={modifiedFilter} onChange={onModifiedFilterChange} />
+          )}
         </div>
       </div>
 
       {/* Files Grid */}
-      {files.length === 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#2a2b2f] border-t-[#8ab4f8]" />
+        </div>
+      ) : files.length === 0 ? (
         <div className="flex h-64 items-center justify-center">
-          <p className="text-sm text-[#9aa0a6]">No files or folders yet</p>
+          <p className="text-sm text-[#9aa0a6]">
+            {typeFilter !== "all" ? `No ${FILE_TYPE_OPTIONS.find((opt) => opt.value === typeFilter)?.label.toLowerCase()} found` : "No files or folders yet"}
+          </p>
         </div>
       ) : (
-        <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
-          {files.map((file) => (
-            <FileCard
-              key={file.id}
-              id={file.id}
-              name={file.name}
-              type={file.type || undefined}
-              isFolder={file.isFolder}
-              onContextMenu={onFileContextMenu}
-              onClick={() => onFileClick?.(file.id, file.isFolder)}
-            />
-          ))}
-        </div>
+        <>
+          {/* Folders Section */}
+          {files.filter((f) => f.isFolder).length > 0 && (
+            <div className="mb-6">
+              <h2 className="mb-3 text-sm font-medium text-[#e8eaed]">Folders</h2>
+              <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
+                {files
+                  .filter((f) => f.isFolder)
+                  .map((folder) => (
+                    <FileCard
+                      key={folder.id}
+                      id={folder.id}
+                      name={folder.name}
+                      type={folder.type || undefined}
+                      isFolder={true}
+                      onContextMenu={onFileContextMenu}
+                      onClick={() => onFileClick?.(folder.id, true)}
+                      isDragging={draggedFileId === folder.id}
+                      isDragOver={dragOverFileId === folder.id}
+                      onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onMove={onMove}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Files Section */}
+          {files.filter((f) => !f.isFolder).length > 0 && (
+            <div className="mb-6">
+              {files.filter((f) => f.isFolder).length > 0 && (
+                <h2 className="mb-3 text-sm font-medium text-[#e8eaed]">Files</h2>
+              )}
+              <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, 260px)", gap: "16px" }}>
+                {files
+                  .filter((f) => !f.isFolder)
+                  .map((file) => (
+                    <FileCard
+                      key={file.id}
+                      id={file.id}
+                      name={file.name}
+                      type={file.type || undefined}
+                      isFolder={false}
+                      onContextMenu={onFileContextMenu}
+                      onClick={() => onFileClick?.(file.id, false)}
+                      isDragging={draggedFileId === file.id}
+                      isDragOver={false}
+                      onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onMove={onMove}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
