@@ -50,6 +50,8 @@ interface FileGridProps {
   onModifiedFilterChange?: (filter: ModifiedFilterOption | null) => void
   onMove?: (fileId: string, targetFolderId: string | null) => void
   isLoading?: boolean
+  emptyStateImage?: string
+  emptyStateMessage?: string
 }
 
 export function FileGrid({
@@ -73,6 +75,8 @@ export function FileGrid({
   onModifiedFilterChange,
   onMove,
   isLoading = false,
+  emptyStateImage,
+  emptyStateMessage,
 }: FileGridProps) {
   const [draggedFileId, setDraggedFileId] = useState<string | null>(null)
   const [draggedIsFolder, setDraggedIsFolder] = useState<boolean>(false)
@@ -254,10 +258,14 @@ export function FileGrid({
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
         </div>
       ) : files.length === 0 ? (
-        <div className="flex h-64 items-center justify-center">
-          <p className="text-sm text-slate-500">
-            {typeFilter !== "all" ? `No ${FILE_TYPE_OPTIONS.find((opt) => opt.value === typeFilter)?.label.toLowerCase()} found` : "No files or folders yet"}
-          </p>
+        <div className="flex flex-col items-center justify-center py-16 -mt-40">
+          {emptyStateImage && (
+            <img 
+              src={emptyStateImage} 
+              alt="Empty state" 
+              className="w-[640px] h-[640px] object-contain"
+            />
+          )}
         </div>
       ) : (
         <>

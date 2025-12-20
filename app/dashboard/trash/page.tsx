@@ -160,8 +160,12 @@ export default function TrashPage() {
               </div>
             </>
           ) : (
-            <div className="flex h-64 items-center justify-center">
-              <p className="text-sm text-slate-500">Trash is empty</p>
+            <div className="flex flex-col items-center justify-center py-16 -mt-40">
+              <img 
+                src="/trash.png" 
+                alt="Empty trash" 
+                className="w-[640px] h-[640px] object-contain"
+              />
             </div>
           )}
         </div>

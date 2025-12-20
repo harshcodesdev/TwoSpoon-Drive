@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { User, LogOut, Settings, CreditCard, HelpCircle } from "lucide-react"
+import {LogOut, Settings} from "lucide-react"
 import { signOut } from "next-auth/react"
 
 interface UserProfilePopupProps {
@@ -24,6 +24,7 @@ export function UserProfilePopup({ user, onClose }: UserProfilePopupProps) {
 
   // Reset image error when user changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setImageError(false)
   }, [user?.image])
 

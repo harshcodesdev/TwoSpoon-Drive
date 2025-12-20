@@ -434,6 +434,7 @@ export default function DashboardPage() {
               modifiedFilter={modifiedFilter}
               onModifiedFilterChange={handleModifiedFilterChange}
               onMove={handleMove}
+              emptyStateImage="/mydrive.png"
             />
       )}
       {contextMenuPos && selectedFile && (

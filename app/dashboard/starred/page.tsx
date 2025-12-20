@@ -233,6 +233,7 @@ export default function StarredPage() {
         onModifiedFilterChange={setModifiedFilter}
         onMove={undefined}
         isLoading={isLoadingFiles}
+        emptyStateImage="/starred.png"
       />
       {contextMenuPos && selectedFile && (
         <ContextMenu

@@ -223,6 +223,7 @@ export default function SharedWithMePage() {
         modifiedFilter={modifiedFilter}
         onModifiedFilterChange={handleModifiedFilterChange}
         isLoading={isLoadingFiles}
+        emptyStateImage="/sharedwithme.png"
       />
       {contextMenuPos && selectedFile && (
         <ContextMenu
